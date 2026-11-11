@@ -1,0 +1,19 @@
+name = "zameendost-api"
+main = "src/index.ts"
+compatibility_date = "2024-11-01"
+
+# Free plan: 100,000 requests/day, 10 ms CPU per request. Keep handlers light.
+# Replace database_id after `wrangler d1 create zameendost` (see docs/free-deployment).
+[[d1_databases]]
+binding = "DB"
+database_name = "zameendost"
+database_id = "REPLACE_WITH_YOUR_D1_DATABASE_ID"
+migrations_dir = "migrations"
+
+[vars]
+ALLOWED_ORIGIN = "https://YOUR_GITHUB_USERNAME.github.io"
+# Set the secret with:  wrangler secret put JWT_SECRET   (never commit it)
+
+# Optional scheduled job (free plan allows cron triggers); disabled until needed.
+# [triggers]
+# crons = ["0 1 * * *"]

@@ -1,0 +1,17 @@
+{
+  "name": "zameendost-worker",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev --local --persist-to .wrangler/state",
+    "migrate:local": "wrangler d1 migrations apply zameendost --local --persist-to .wrangler/state",
+    "migrate:remote": "wrangler d1 migrations apply zameendost --remote",
+    "deploy": "wrangler deploy",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": { "@turf/area": "^7.1.0" },
+  "devDependencies": { "@cloudflare/workers-types": "^4.20241022.0", "typescript": "^5.6.0", "wrangler": "^3.90.0", "vitest": "^2.1.0" },
+  "license": "MIT"
+}
