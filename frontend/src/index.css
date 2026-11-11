@@ -1,0 +1,5 @@
+@tailwind base; @tailwind components; @tailwind utilities;
+html { font-size: 18px; }
+body { font-family: "Noto Nastaliq Urdu", "Noto Naskh Arabic", "Jameel Noori Nastaleeq", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; line-height: 1.9; }
+html[lang="en"] body { line-height: 1.5; }
+.leaflet-container { font-family: inherit; }

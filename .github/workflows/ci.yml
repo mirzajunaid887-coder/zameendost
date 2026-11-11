@@ -1,0 +1,24 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22 }
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - run: pip install pytest numpy
+      - name: Python reference tests
+        run: python -m pytest irrigation-engine/tests satellite/processing/tests -q
+      - name: Vectors are in sync with the Python reference
+        run: |
+          python irrigation-engine/tests/make_vectors.py > /dev/null
+          git diff --exit-code irrigation-engine/tests/vectors.json
+      - name: TypeScript engine tests
+        run: cd irrigation-engine/typescript && npm install && npm run typecheck && npm test
+      - name: Worker typecheck
+        run: cd worker && npm install && npm run typecheck
+      - name: Frontend build
+        run: cd frontend && npm install && VITE_BASE=/${{ github.event.repository.name }}/ npm run build
