@@ -44,7 +44,10 @@ try:
             m = re.search(r"past_days=(\d+)", url); pdays = int(m.group(1)) if m else 10
             route.fulfill(status=200, content_type="application/json", body=json.dumps(synth_payload(today - timedelta(days=pdays), today + timedelta(days=6))))
         ctx.route(re.compile(r"https://(api|archive-api)\.open-meteo\.com/.*"), handle)
-        ctx.route(re.compile(r"https://.*tile\.openstreetmap\.org/.*"), lambda r: r.abort())
+        tiles = []
+        def tile(r):
+            tiles.append(r.request.url); r.abort()
+        ctx.route(re.compile(r"https://(.*tile\.openstreetmap\.org|server\.arcgisonline\.com)/.*"), tile)
 
         page.goto(BASE); page.wait_for_selector("text=زمین دوست")
         check("Urdu default and RTL", page.evaluate("document.documentElement.dir") == "rtl" and page.evaluate("document.documentElement.lang") == "ur")
@@ -53,29 +56,32 @@ try:
         box = page.locator(".leaflet-container").bounding_box()
         cx, cy = box["x"] + box["width"] / 2, box["y"] + box["height"] / 2
         for dx, dy in [(-40, -30), (40, -30), (40, 30), (-40, 30)]: page.mouse.click(cx + dx, cy + dy)
-        page.wait_for_selector("text=/رقبہ: [0-9.]+ ہیکٹر/")
-        area_txt = page.locator("text=/رقبہ: [0-9.]+ ہیکٹر/").first.inner_text()
-        check("area computed from drawn polygon", float(re.search(r"([0-9.]+) ہیکٹر", area_txt).group(1)) > 0.5, area_txt)
-        page.locator("input").first.fill("Test Field")
-        pd = (today - timedelta(days=60)).isoformat()
-        page.locator("input[type=date]").fill(pd)
-        page.click("text=محفوظ کریں"); page.wait_for_selector("text=/اعتماد/", timeout=30000)
+        page.wait_for_selector("text=/[0-9.]+ ایکڑ/")
+        area_txt = page.locator("text=/[0-9.]+ ایکڑ \\(/").first.inner_text()
+        check("area computed from drawn polygon (acres shown first)", float(re.search(r"([0-9.]+) ایکڑ", area_txt).group(1)) > 1, area_txt)
+        check("satellite imagery is the default basemap", any("arcgisonline" in u for u in tiles) and not any("openstreetmap" in u for u in tiles), tiles[:2])
+        page.click("text=🗺️ سڑکیں"); page.wait_for_timeout(800)
+        check("street map toggle works", any("openstreetmap" in u for u in tiles))
+        for _ in range(5):
+            page.click("text=آگے")
+        page.fill("input", "Test Field")
+        page.click("text=✅ شروع کریں"); page.wait_for_selector("text=/اعتماد/", state="attached", timeout=30000)
         check("advisory screen shows confidence and estimate disclaimer", page.locator("text=یہ اندازہ ہے، پیمائش نہیں۔").count() > 0)
         check("weather source attribution shown", page.locator("text=Open-Meteo").count() > 0)
         check("satellite honestly shown as not connected", page.locator("text=سیٹلائٹ مشاہدات ابھی منسلک نہیں ہیں").count() > 0)
         check("no uncaught page errors", not errors, errors[:1])
         page.screenshot(path="/tmp/zd_home_ur.png", full_page=True)
         # report irrigation
-        page.click("text=نہیں >> nth=0") if page.locator("text=نہیں").count() else None
+        page.click("button:has-text(\"نہیں\") >> nth=0")
         page.wait_for_timeout(800)
         page.click("text=English"); page.wait_for_selector("text=Did you irrigate your field today?")
         check("English switch flips to LTR", page.evaluate("document.documentElement.dir") == "ltr")
         page.screenshot(path="/tmp/zd_home_en.png", full_page=True)
         page.click("nav >> text=History"); page.wait_for_selector("text=Irrigation history")
         check("history shows the reported 'No' and 14-day balance", page.locator("text=Last 14 days water balance").count() > 0)
-        page.click("nav >> text=Savings"); page.wait_for_selector("text=Water and money savings (estimate)")
+        page.click("nav >> text=More"); page.click("text=💰 Savings"); page.wait_for_selector("text=Water and money savings (estimate)")
         check("savings refuses to claim without baseline", page.locator("text=A savings estimate is not possible yet.").count() > 0)
-        page.click("nav >> text=About"); page.wait_for_selector("text=Model and data quality")
+        page.click("nav >> text=More"); page.click("text=ℹ️ About"); page.wait_for_selector("text=Model and data quality")
         check("about page lists crop params with verification status", page.locator("text=needs_verification").count() > 0)
         # deep link refresh
         page.goto(BASE + "#/history"); page.reload(); page.wait_for_selector("text=Irrigation history")

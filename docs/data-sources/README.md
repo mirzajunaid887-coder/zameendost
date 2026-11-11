@@ -8,3 +8,8 @@
 | SoilGrids / Pakistani soil data | Better soil defaults | Not implemented | Currently 6 texture-class defaults (FAO-56 range midpoints). |
 | Sentinel-2 / Sentinel-1 / Landsat via Copernicus Data Space | NDVI/NDMI, backscatter, LST | Index maths only | See `satellite/README.md`. |
 | OpenStreetMap tiles | Basemap | Integrated | Standard tile server has a usage policy; fine for a pilot, swap provider if traffic grows. |
+
+## Basemap licensing note
+The field-drawing map defaults to Esri World Imagery (high-detail satellite) with the required attribution, and can switch to OpenStreetMap streets.
+Esri's terms for using World Imagery tiles in an app are not as simple as "free forever": check https://www.esri.com/en-us/legal/terms/full-master-agreement and the current World Imagery terms before a wide public launch.
+The tile layer is one line in `frontend/src/pages/FieldSetup.tsx`, so it can be swapped (e.g. a Sentinel-2 cloudless mosaic, lower resolution but openly licensed for non-commercial use — verify its terms too).

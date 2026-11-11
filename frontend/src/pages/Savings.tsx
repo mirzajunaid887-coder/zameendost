@@ -3,7 +3,7 @@ import { useLang } from "../i18n/LangContext";
 import { useActiveField } from "../components/FieldPicker";
 import { useAdvice } from "../advisory/useAdvice";
 import { putField } from "../storage/db";
-import { estimateSavings, diffDays, EFFICIENCY } from "@engine";
+import { estimateSavings, diffDays } from "@engine";
 import { todayPK } from "../services/weather";
 
 export default function Savings() {
@@ -14,9 +14,6 @@ export default function Savings() {
   if (!active) return <p>{t("none_yet")}</p>;
   if (a.loading || !a.field) return <p>{t("loading")}</p>;
   const f = a.field;
-  const eff = EFFICIENCY[f.irrigation_method];
-  const actualGross = a.recent.length ? 0 : 0; // placeholder replaced below
-  void actualGross;
   const events = a.reports.filter((r) => r.status !== "no").length;
   const grossTotal = a.reports.reduce((s, r) => s + (r.status !== "no" ? (r.gross_depth_mm ?? 0) : 0), 0);
   const baseline = f.baseline_interval_days && f.baseline_depth_mm ? { usual_interval_days: f.baseline_interval_days, usual_gross_depth_mm: f.baseline_depth_mm } : null;
@@ -25,7 +22,6 @@ export default function Savings() {
     pump: { water_source: f.water_source as any, pump_kw: f.pump_kw, pump_discharge_m3h: f.pump_discharge_m3h, tariff_per_kwh: f.tariff_per_kwh, fuel_l_per_h: f.fuel_l_per_h, diesel_price_per_l: f.diesel_price_per_l },
   });
   const missingDepth = a.reports.some((r) => r.status !== "no" && r.gross_depth_mm == null);
-  void eff;
 
   async function saveBaseline() {
     await putField({ ...f, baseline_interval_days: Number(iv) || null, baseline_depth_mm: Number(dp) || null });
