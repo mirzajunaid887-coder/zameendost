@@ -1,0 +1,19 @@
+{
+  "_meta": {
+    "units": {"theta_fc": "m3/m3", "theta_wp": "m3/m3", "runoff_fraction": "fraction of rainfall"},
+    "status": "COARSE_DEFAULTS",
+    "notes": [
+      "theta_fc / theta_wp are midpoints of FAO-56 Table 19 style ranges by texture class; real fields can differ by several percentage points. Not laboratory values.",
+      "runoff_fraction is an uncalibrated simplification (no slope, intensity or crusting). Treat as a placeholder to be calibrated.",
+      "Soil type defaults must be shown to the farmer as 'approximate' and be correctable."
+    ]
+  },
+  "soils": {
+    "sand":       {"name_en": "Sandy", "name_ur": "ریتلی", "theta_fc": 0.16, "theta_wp": 0.07, "runoff_fraction": 0.05},
+    "sandy_loam": {"name_en": "Sandy loam", "name_ur": "ریتلی میرا", "theta_fc": 0.23, "theta_wp": 0.11, "runoff_fraction": 0.08},
+    "loam":       {"name_en": "Loam", "name_ur": "میرا", "theta_fc": 0.25, "theta_wp": 0.12, "runoff_fraction": 0.12},
+    "silt_loam":  {"name_en": "Silt loam", "name_ur": "گار والی میرا", "theta_fc": 0.29, "theta_wp": 0.15, "runoff_fraction": 0.15},
+    "clay_loam":  {"name_en": "Clay loam", "name_ur": "چکنی میرا", "theta_fc": 0.335, "theta_wp": 0.205, "runoff_fraction": 0.20},
+    "clay":       {"name_en": "Clay", "name_ur": "چکنی", "theta_fc": 0.36, "theta_wp": 0.22, "runoff_fraction": 0.25}
+  }
+}

@@ -1,0 +1,4 @@
+{
+  "_meta": {"status": "ASSUMPTIONS", "notes": ["Field application efficiencies are rough planning values. Local studies report surface irrigation can be as low as about 50%. Farmers should be able to override."]},
+  "application_efficiency": {"flood": 0.50, "basin": 0.60, "furrow": 0.60, "sprinkler": 0.75, "drip": 0.90}
+}

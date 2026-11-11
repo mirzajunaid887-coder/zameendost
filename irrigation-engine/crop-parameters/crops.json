@@ -1,0 +1,43 @@
+{
+  "_meta": {
+    "units": {"kc": "-", "stages_days": "days", "root_depth": "m", "p": "fraction of TAW"},
+    "model": "FAO-56 single crop coefficient, three Kc points (ini, mid, end), linear development and late-season interpolation",
+    "status": "NEEDS_LOCAL_VERIFICATION",
+    "notes": [
+      "Kc, root depth and p are FAO-56 (Allen et al., 1998) Table 12 / Table 22 style values entered from the author's knowledge of that paper; they must be re-checked against the published tables before pilot use.",
+      "Stage lengths are generic starting values, NOT calibrated for Rawalpindi planting dates or local varieties. Replace with Punjab Agriculture Department / PARC / NARC guidance.",
+      "root_depth_max_m uses the lower end of the FAO-56 range (conservative, matches shallower Pothohar soils). root_depth_ini_m is an assumption.",
+      "Crops here are candidates for Rawalpindi; local suitability has not been verified by this project."
+    ]
+  },
+  "crops": {
+    "wheat": {
+      "name_en": "Wheat", "name_ur": "گندم", "season": "rabi",
+      "kc_ini": 0.40, "kc_mid": 1.15, "kc_end": 0.30,
+      "stages_days": {"ini": 30, "dev": 45, "mid": 50, "late": 30},
+      "root_depth_ini_m": 0.25, "root_depth_max_m": 1.5, "p": 0.55,
+      "source_status": "needs_verification"
+    },
+    "maize": {
+      "name_en": "Maize (grain)", "name_ur": "مکئی", "season": "kharif/spring",
+      "kc_ini": 0.30, "kc_mid": 1.20, "kc_end": 0.60,
+      "stages_days": {"ini": 20, "dev": 35, "mid": 40, "late": 30},
+      "root_depth_ini_m": 0.25, "root_depth_max_m": 1.0, "p": 0.55,
+      "source_status": "needs_verification"
+    },
+    "groundnut": {
+      "name_en": "Groundnut", "name_ur": "مونگ پھلی", "season": "kharif",
+      "kc_ini": 0.40, "kc_mid": 1.15, "kc_end": 0.60,
+      "stages_days": {"ini": 25, "dev": 35, "mid": 45, "late": 25},
+      "root_depth_ini_m": 0.25, "root_depth_max_m": 0.5, "p": 0.50,
+      "source_status": "needs_verification"
+    },
+    "sorghum": {
+      "name_en": "Sorghum (fodder/grain)", "name_ur": "جوار", "season": "kharif",
+      "kc_ini": 0.30, "kc_mid": 1.05, "kc_end": 0.55,
+      "stages_days": {"ini": 20, "dev": 35, "mid": 40, "late": 30},
+      "root_depth_ini_m": 0.25, "root_depth_max_m": 1.0, "p": 0.55,
+      "source_status": "needs_verification"
+    }
+  }
+}
